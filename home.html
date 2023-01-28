@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+      
+       var obj  = [];
+       var namelist = [];
+       var contactlist = [];
+    //    function checkname(name){
+    //     const ans = -1;
+    //      for(let i = 0;i< namelist.length;i++){
+    //         if(namelist[i] == number){
+    //             return 1;
+    //         }
+    //      }
+    //      return -1;
+    //    }
+    //    function checkcontact(number){
+    //      const ans = -1;
+    //      for(let i = 0;i< contactlist.length;i++){
+    //         if(contactlist[i] == number){
+    //             return 1;
+    //         }
+    //      }
+    //      return -1;
+    //    }
+        function submitter(){
+          var arr = document.getElementById("detail").elements;
+           
+           var fname = arr[0].value.toLowerCase();
+           var fullname = fname.concat(arr[1].value.toLowerCase());
+           fullname.toLowerCase();
+           fullname = fullname.replaceAll(' ','');
+              console.log(fullname);
+           var contactnumber = arr[2].value;
+           if(namelist.indexOf(fullname) == -1 && contactlist.indexOf(contactnumber) == -1 && fullname.length != 0 && contactnumber.length !=0){
+            var newobj = {};
+            namelist.push(fullname);
+            contactlist.push(contactnumber);
+           newobj["name"] = arr[0].value +" "+ arr[1].value;
+           newobj["contact"] = arr[2].value;
+           obj.push(newobj);
+           console.log(obj);
+           var header = document.getElementById("table-body");
+           const newrow = document.createElement("tr");
+           const col0 = document.createElement("td");
+           col0.innerText = obj.length;
+           const col1 = document.createElement("td");
+           col1.innerText = arr[0].value + arr[1].value;
+           const col2 = document.createElement("td");
+           col2.innerText = arr[2].value;
+           const col3 = document.createElement("td");
+           const del = document.createElement("img");
+           del.setAttribute("src","delete.png");
+           del.setAttribute("width","20px");
+           del.setAttribute("height","20px");
+           del.addEventListener("click",deletespecific);
+           col3.appendChild(del);
+           newrow.appendChild(col0);
+           newrow.appendChild(col1);
+           newrow.appendChild(col2);
+           newrow.appendChild(col3);
+           header.appendChild(newrow);
+       
+           }else{
+               alert("Duplicate Detail found or Fields are Empty");
+           }
+          document.getElementById("detail").reset();
+
+        }
+       
+
+        function searcher(){
+            var data = document.getElementById("search");
+            var name = data.value;
+            name = name.replaceAll(' ','');
+            name = name.toLowerCase();
+            console.log(name);
+            var index = namelist.indexOf(name);
+            console.log(namelist);
+            if(index != -1){
+                alert("Name : " + " "+obj[index]["name"] +" "+ "Contact : " + obj[index]["contact"]);
+            }else{
+                alert("Name not found");
+            }
+        }
+      function deletespecific(){
+        //  $("img").click(function(){
+        //     alert("Are you sure you want to delete ");
+        //     $(this).parent().click(function(){
+                
+        //         $(this).parent().remove();
+        //     });
+        //  });
+
+     
+      // const arr1 = $(this).parent().parent().val();
+      // const arr2 = arr1.getElementsByTagName("td");
+      // console.log(arr1);
+      alert("Are you sure to delete ? ");
+      const arr1 = this.parentNode.parentNode.getElementsByTagName("td");
+       const fullname = arr1[1].innerText;
+       const contactno = arr1[2].innerText;
+       var str = fullname;
+       str = str.replaceAll(' ','');
+       str = str.toLowerCase();
+       var index = namelist.indexOf(str);
+       if(index != -1){
+          namelist.splice(index,1);
+       }
+       var index = contactlist.indexOf(contactno);
+       if(index != -1){
+          contactlist.splice(index,1);
+       }
+       var index = obj.findIndex(item => item.contact == contactno);
+       console.log(index);
+       if(index != -1){
+          obj.splice(index,1);
+       }
+    
+       $(this).parent().parent().remove();
+       const header =  document.getElementById("table-body");
+       const array = header.getElementsByTagName("tr");
+             for(let x = 0; x<array.length;x++ ){
+                 const arr3 = array[x].getElementsByTagName("td");
+                arr3[0].innerText = x+1;
+             }
+       console.log(namelist);
+       console.log(contactlist);
+       console.log(obj);
+      }
+
+      function sorting(){
+    //     console.log("Lists : ");
+    //    console.log(namelist);
+    //    console.log(contactlist);
+    const header = document.getElementById("table-body");
+        // console.log(obj);
+                // $("#table-body").remove();
+            //    var copyobj = obj;
+              obj = obj.sort(function(name1,name2){
+                console.log("Sorting ");
+                  var str1 = name1.name;
+                  var str2 = name2.name;
+                  str1 = str1.replaceAll(' ','');
+                  str2  = str2.replaceAll(' ','');
+                  str1 =  str1.toLowerCase();
+                   str2 = str2.toLowerCase();
+                   console.log(str1);
+                   console.log(str2);
+                    return (str1<str2 ? -1 : 0);
+               });
+        
+            console.log(obj);
+             const array = header.getElementsByTagName("tr");
+             for(let x = 0; x<array.length;x++ ){
+                 const arr1 = array[x].getElementsByTagName("td");
+                arr1[1].innerText = obj[x].name;
+                arr1[2].innerText = obj[x].contact;
+             }
+      }
+    </script>
+  <style>
+    
+    #detail{
+         width: 300px;
+         height: 200px;
+         border: 2px solid black;
+         padding: 15px;
+         border-radius: 2px;
+    }
+    #save-btn{
+        width: 87%;
+        margin-top: 15px;
+        height: 40px;
+        background-color: rgb(131, 251, 131);
+        border-radius: 2px;
+    }
+    #contact{
+        width: 85%;
+        height: 20px;
+    }
+    #name{
+        width: 28%;
+        height: 20px;
+    }
+    #lname{
+        width: 55%;
+        height: 20px;
+    }
+    #search-bar{
+        
+        width: 70%;
+        height: 40px;
+        border: 2px solid rgb(8, 8, 8);
+        border-radius: 20px  ;
+        padding: 0px;
+    }
+    #search{
+        height: 35px;
+        width:90%;
+        border: 0px solid rgb(253, 9, 9);
+        border-radius: 20px  ;
+        margin: 0px;
+        font-size: large;
+    }
+    #search:focus,text:focus{
+        outline: 0px;
+    }
+    img{
+        float: left;
+    }
+    table,th,tr,td,thead{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th,td{
+        padding: 10px;
+    }
+    .search-menu{
+        display: flex;
+        margin-top: 50px;
+        column-gap: 20px;
+        flex-direction: row;
+        justify-content: center;
+        
+    }
+    #search-btn{
+        width: 60px;
+        height: 40px;
+        background-color: blue;
+        color: white;
+        cursor:pointer;
+        border-radius: 3px;
+    }
+    #home-page{
+        display: flex;
+        flex-direction: column;
+        column-gap: 20px;
+        border: 2px solid red;;
+    }
+    .header-style th{
+           background-color: black;
+           color:white;
+           border: 2px solid white;
+    }
+    body{
+        background-image: url("bg.jpg");
+    }
+  </style>
+
+</head>
+<body>
+   
+    <div style="display: flex; flex-direction: column; align-items: center;margin-top: 50px;">
+    <form id="detail" >
+        <label for="name">Person's Name</label>
+        <br>
+        <input type="text" id="name" name="fname" placeholder="First" required>
+        <input type="text"  id="lname" name="lname"  placeholder="Last" required>
+        <br>
+        <br>
+        <label for="name">Contact Number</label>
+        <br>
+        <input id="contact" type="text" id="contact" name="contact"  required>
+        <br>
+        <button type="button" id="save-btn" onclick="submitter()"> Save </button>
+    </form>
+    </div>
+      <div class="search-menu">
+        <div id="search-bar">
+            <img src="icon.png" width="20px" height="20px" style="padding-top: 1%; padding-left: 2%;">
+            <input type="text" id="search" name="searchq"  >
+        </div>
+        <button type="button" id="search-btn" onclick="searcher()"> Search</button>
+      </div>
+    <div style="margin-top : 30px;display: flex; flex-direction: column; align-items: center;">
+    <table id="table-id">
+        <thead class="header-style">
+            <th>S No.</th>
+            <th onclick="sorting()">Name</th>
+            <th>Contact</th>
+            <th>Delete</th>
+        </thead>
+        <tbody id="table-body">
+
+        </tbody>
+    </table>
+    </div>
+  <div>
+ 
+  </div>
+</body>
+</html>

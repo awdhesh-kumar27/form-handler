@@ -7,6 +7,7 @@
        var obj  = [];
        var namelist = [];
        var contactlist = [];
+       var smallobj = [];
     //    function checkname(name){
     //     const ans = -1;
     //      for(let i = 0;i< namelist.length;i++){
@@ -40,14 +41,18 @@
             contactlist.push(contactnumber);
            newobj["name"] = arr[0].value +" "+ arr[1].value;
            newobj["contact"] = arr[2].value;
+           var smallnewobj = {};
+           smallnewobj["name"] = fullname;
+           smallnewobj["contact"] = contactnumber;
            obj.push(newobj);
+           smallobj.push(smallnewobj);
            console.log(obj);
            var header = document.getElementById("table-body");
            const newrow = document.createElement("tr");
            const col0 = document.createElement("td");
            col0.innerText = obj.length;
            const col1 = document.createElement("td");
-           col1.innerText = arr[0].value +" "+ arr[1].value;
+           col1.innerText = arr[0].value + arr[1].value;
            const col2 = document.createElement("td");
            col2.innerText = arr[2].value;
            const col3 = document.createElement("td");
@@ -73,14 +78,18 @@
 
         function searcher(){
             var data = document.getElementById("search");
-            var name = data.value;
-            name = name.replaceAll(' ','');
-            name = name.toLowerCase();
-            console.log(name);
-            var index = namelist.indexOf(name);
+            var searchname = data.value;
+            searchname = searchname.replaceAll(' ','');
+            searchname = searchname.toLowerCase();
+            console.log(searchname);
+          //  var index = namelist.indexOf(name);
+            var index = smallobj.findIndex(item => item.name == searchname);
             console.log(namelist);
+    
             if(index != -1){
-                alert("Name : " + " "+obj[index]["name"] +" "+ "Contact : " + obj[index]["contact"]);
+              //  alert("Name : " + " "+obj[index]["name"] +" "+ "Contact : " + obj[index]["contact"]);
+              const data = obj[index];
+              alert("Name : " + " "+data.name +" "+ "Contact : " + data.contact);
             }else{
                 alert("Name not found");
             }
@@ -114,9 +123,14 @@
           contactlist.splice(index,1);
        }
        var index = obj.findIndex(item => item.contact == contactno);
-       console.log(index);
+      // console.log(index);
        if(index != -1){
           obj.splice(index,1);
+       }
+       var index = smallobj.findIndex(item => item.contact == contactno);
+      // console.log(index);
+       if(index != -1){
+          smallobj.splice(index,1);
        }
     
        $(this).parent().parent().remove();
@@ -151,7 +165,18 @@
                    console.log(str2);
                     return (str1<str2 ? -1 : 0);
                });
-        
+               smallobj = smallobj.sort(function(name1,name2){
+                console.log("Sorting ");
+                  var str1 = name1.name;
+                  var str2 = name2.name;
+                  str1 = str1.replaceAll(' ','');
+                  str2  = str2.replaceAll(' ','');
+                  str1 =  str1.toLowerCase();
+                   str2 = str2.toLowerCase();
+                   console.log(str1);
+                   console.log(str2);
+                    return (str1<str2 ? -1 : 0);
+               });
             console.log(obj);
              const array = header.getElementsByTagName("tr");
              for(let x = 0; x<array.length;x++ ){
